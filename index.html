@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hero Carousel</title>
+  <style>
+    /* Reset */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: Arial, sans-serif; background: #111; color: #fff; overflow-x: hidden; }
+
+    /* Hero Section */
+    .hero {
+      position: relative;
+      height: 100vh;
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      align-items: center;
+      padding: 50px;
+      transition: background-image 0.6s ease-in-out;
+    }
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.45);
+    }
+
+    /* Hero Content (left side) */
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      flex: 1;
+      max-width: 40%;
+    }
+
+    .hero-kicker { font-size: 14px; letter-spacing: 2px; opacity: 0.8; }
+    .hero-title { font-size: 56px; font-weight: bold; margin: 20px 0; line-height: 1.1; }
+    .hero-desc { font-size: 16px; max-width: 450px; margin-bottom: 20px; }
+    .hero-btn {
+      padding: 12px 24px; background: #ff9800; border: none; border-radius: 5px;
+      font-size: 14px; cursor: pointer; color: #fff; transition: background 0.3s;
+    }
+    .hero-btn:hover { background: #e68a00; }
+
+    /* Carousel (right side) */
+    .carousel {
+      position: relative;
+      z-index: 2;
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      max-width: 600px;
+    }
+
+    .cards-track {
+      display: flex;
+      transition: transform 0.6s ease-in-out;
+    }
+
+    .card {
+      width: 180px;
+      height: 260px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      cursor: pointer;
+      flex-shrink: 0;
+      margin-right: 20px;
+      overflow: hidden;
+      transition: transform 0.3s;
+    }
+
+    .card:hover { transform: translateY(-5px); }
+
+    .card .img {
+      width: 100%;
+      height: 75%;
+      overflow: hidden;
+    }
+
+    .card .img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .card .caption {
+      padding: 8px;
+      font-size: 14px;
+      text-align: center;
+    }
+
+    /* Navigation arrows */
+    .nav {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+      z-index: 2;
+    }
+    .nav button {
+      background: rgba(255, 255, 255, 0.3);
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      color: #fff;
+      font-size: 18px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .nav button:hover { background: rgba(255, 255, 255, 0.6); }
+
+    /* Slide Index */
+    .slide-index {
+      position: absolute;
+      bottom: 40px;
+      right: 50px;
+      font-size: 20px;
+      font-weight: bold;
+      z-index: 2;
+    }
+  </style>
+</head>
+<body>
+  <section class="hero" id="hero">
+    <div class="hero-overlay"></div>
+
+    <!-- Left Side Text -->
+    <div class="hero-content">
+      <p class="hero-kicker" id="hero-kicker">Switzerland Alps</p>
+      <h1 class="hero-title" id="hero-title">Saint Antönien</h1>
+      <p class="hero-desc" id="hero-desc">
+        A beautiful alpine village known for its hiking trails and breathtaking views.
+      </p>
+      <button class="hero-btn" id="hero-cta">Browse Destination</button>
+    </div>
+
+    <!-- Right Side Carousel -->
+    <div class="carousel">
+      <div class="cards-track" id="cards-track">
+        <div class="card" data-title="Saint Antönien" data-desc="A beautiful alpine village known for its hiking trails and breathtaking views." data-kicker="Switzerland Alps" data-cta="Browse Destination">
+          <div class="img"><img src="images/cyclist-1700871_1280.jpg" alt="Saint Antönien"></div>
+          <div class="caption">Saint Antönien</div>
+        </div>
+        <div class="card" data-title="Nagano Prefecture" data-desc="Home to Japan's snow monkeys and scenic mountain landscapes." data-kicker="Japan" data-cta="Explore More">
+          <div class="img"><img src="images/caravan-4483792_1280.jpg" alt="Nagano Prefecture"></div>
+          <div class="caption">Nagano Prefecture</div>
+        </div>
+        <div class="card" data-title="Marrakech Merzouga" data-desc="Famous for its desert landscapes and camel treks." data-kicker="Morocco" data-cta="Discover">
+          <div class="img"><img src="images/girl-1562025_1280.jpg" alt="Marrakech Merzouga"></div>
+          <div class="caption">Marrakech Merzouga</div>
+        </div>
+        <div class="card" data-title="Yosemite National Park" data-desc="Iconic park with waterfalls, cliffs, and giant sequoias." data-kicker="USA" data-cta="Plan Trip">
+          <div class="img"><img src="images/aesthetic-9093322_1280.jpg" alt="Yosemite National Park"></div>
+          <div class="caption">Yosemite</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation Arrows -->
+    <div class="nav">
+      <button id="prev">&#10094;</button>
+      <button id="next">&#10095;</button>
+    </div>
+
+    <!-- Slide Index -->
+    <div class="slide-index" id="slide-index">01</div>
+  </section>
+
+  <script>
+    const hero = document.getElementById("hero");
+    const heroTitle = document.getElementById("hero-title");
+    const heroDesc = document.getElementById("hero-desc");
+    const heroKicker = document.getElementById("hero-kicker");
+    const heroCTA = document.getElementById("hero-cta");
+    const cards = document.querySelectorAll(".card");
+    const track = document.getElementById("cards-track");
+    const prevBtn = document.getElementById("prev");
+    const nextBtn = document.getElementById("next");
+    const slideIndex = document.getElementById("slide-index");
+
+    let currentIndex = 0;
+
+    function formatIndex(i) {
+      return String(i + 1).padStart(2, "0");
+    }
+
+    function updateHeroFromCard(card) {
+      const imgTag = card.querySelector(".img img");
+      if (imgTag && imgTag.src) {
+        hero.style.backgroundImage = `url('${imgTag.src}')`;
+      }
+      heroTitle.textContent = card.dataset.title;
+      heroDesc.textContent = card.dataset.desc;
+      heroKicker.textContent = card.dataset.kicker;
+      heroCTA.textContent = card.dataset.cta;
+      slideIndex.textContent = formatIndex(currentIndex);
+    }
+
+    function showSlide(index) {
+      if (index < 0) index = cards.length - 1;
+      if (index >= cards.length) index = 0;
+      currentIndex = index;
+
+      const cardWidth = cards[0].offsetWidth + 20; // card + margin
+      track.style.transform = `translateX(${-cardWidth * currentIndex}px)`;
+
+      updateHeroFromCard(cards[currentIndex]);
+    }
+
+    prevBtn.addEventListener("click", () => showSlide(currentIndex - 1));
+    nextBtn.addEventListener("click", () => showSlide(currentIndex + 1));
+
+    cards.forEach((card, index) => {
+      card.addEventListener("click", () => showSlide(index));
+    });
+
+    // Initialize
+    showSlide(0);
+  </script>
+</body>
+</html>
